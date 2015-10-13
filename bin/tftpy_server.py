@@ -27,6 +27,10 @@ def main():
                       action='store_true',
                       default=False,
                       help="Do not log unless it is critical")
+    parser.add_option('--max-blksize',
+                      type='int',
+                      help='max negociable block size (range: %d-%d)' \
+                          % (tftpy.TftpStates.MIN_BLKSIZE, tftpy.TftpStates.MAX_BLKSIZE))
     parser.add_option('-d',
                       '--debug',
                       action='store_true',
@@ -44,6 +48,11 @@ def main():
     if not options.root:
         parser.print_help()
         sys.exit(1)
+
+    if (options.max_blksize and
+        options.max_blksize >= tftpy.TftpStates.MIN_BLKSIZE and
+        options.max_blksize <= tftpy.TftpStates.MAX_BLKSIZE):
+        tftpy.TftpStates.MAX_BLKSIZE = options.max_blksize
 
     server = tftpy.TftpServer(options.root)
     try:
